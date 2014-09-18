@@ -76,6 +76,11 @@ DoubleNode<T>* CircularList<T>::find(int index)
    //find the minimum distance using absolute value
    //set min_dist to the smaller value, keeping the sign
 
+	
+
+
+
+
 
    if (min_dist < 0)  //negative distance means use prev links, counterclockwise
    {
