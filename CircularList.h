@@ -1,6 +1,8 @@
 #if !defined CIRCULARLIST_H
 #define CIRCULARLIST_H
 
+#include <iostream>
+
 #include "CircularListIterator.h"
 
 #include "Drawable.h"
@@ -64,23 +66,33 @@ DoubleNode<T>* CircularList<T>::find(int index)
    if (index >= loc_pos)
    {
       dist_next = index - loc_pos;       //distance without the bridge (next refs, positive)
-      dist_prev = loc_pos + sze - index; //distance using the bridge (prev refs, negative)
+      dist_prev = -(loc_pos + sze - index); //distance using the bridge (prev refs, negative)
    }
    else
    {
-      dist_prev = index - loc_pos;       //distance without the bridge (prev refs, negative)
+      dist_prev = -(loc_pos - index);       //distance without the bridge (prev refs, negative)
       dist_next = sze - loc_pos + index; //distance using the bridge (next refs, positive)
    }
+
+   std::cout << "LocPos: " << loc_pos << ", Index: " << index << std::endl;
+   std::cout << "Prev: " << dist_prev << ", Next: " << dist_next << std::endl;
 
    //DO THIS which distance is smaller?
    //find the minimum distance using absolute value
    //set min_dist to the smaller value, keeping the sign
 
-	
+   //min_dist = abs(dist_prev) >= abs(dist_next) ? abs(dist_next) : abs(dist_prev);	
+   if (abs(dist_next) < abs(dist_prev)) {
 
+      min_dist = dist_next;
 
+   } else {
 
+      min_dist = dist_prev;
 
+   }
+
+   std::cout << "Min: " << min_dist << std::endl;
 
    if (min_dist < 0)  //negative distance means use prev links, counterclockwise
    {
@@ -143,21 +155,30 @@ void CircularList<T>::remove(int index)
 
       if (sze == 1) //special case
       {
+       
+        DoubleNode<T>* curr = find(index);
+        delete curr;
 
-
-
-
-
+        loc_pos = 0;
+        delete loc;
+        loc = NULL;
 
       }
       else
       {
-         //use local variables
 
+        DoubleNode<T>* curr = find(index);
+        DoubleNode<T>* next = curr->getNext();
+        DoubleNode<T>* prev = curr->getPrev();
 
-
-
-
+        prev->setNext(next);
+        next->setPrev(prev);
+    
+        loc = next;
+        loc_pos = index;
+        if (loc_pos >= sze) {
+          loc_pos = sze-1;
+        }
 
       }
       sze--;
